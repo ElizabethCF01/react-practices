@@ -17,7 +17,6 @@ const FormContact = ({ handleSubmit }) => {
                     <Col md={8}>
                         <Form.Control
                             type="text"
-
                             placeholder="Your name"
                             minLength="2"
                             maxLength="50"
@@ -25,7 +24,6 @@ const FormContact = ({ handleSubmit }) => {
                             required
                         />
                         <Form.Text id="NameHelpBlock" muted>
-
                         </Form.Text>
                     </Col>
                 </Form.Group>
@@ -81,17 +79,13 @@ const FormContact = ({ handleSubmit }) => {
                         Rate Us
                     </Form.Label>
                     <Col xs={9} md={5}>
-                        <ul className=" d-flex star-bar mb-3 mt-2"
-                        >
-
+                        <ul className=" d-flex star-bar mb-3 mt-2">
                             <li className="mx-2"><BsStar className='star' data-star-value="DREADFUL" id="1"></BsStar></li>
                             <li className="mx-2"><BsStar className='star' data-star-value="BAD" id="2"></BsStar></li>
                             <li className="mx-2"><BsStar className='star' data-star-value="MEDIUM" id="3"></BsStar></li>
                             <li className="mx-2"><BsStar className='star' data-star-value="GOOD" id="4"></BsStar></li>
                             <li className="mx-2"><BsStar className='star' data-star-value="GREAT" id="5"></BsStar></li>
-
                         </ul>
-
                     </Col>
                     <Col>
                         <div className=" rate"><span id="rate">NULL</span></div>
@@ -103,7 +97,6 @@ const FormContact = ({ handleSubmit }) => {
                         <Button className="mx-2" variant='secondary' type="reset" form='myForm'>Reset</Button>
                     </Col>
                 </Form.Group>
-
             </Form>
         </div >
     )
