@@ -12,9 +12,7 @@ const Footer = () => {
                     <li><a href="https://twitter.com/" target='_blank' rel="noreferrer"><FaTwitter aria-hidden="true"></FaTwitter> </a></li>
                     <li><a href="https://www.youtube.com/" target='_blank' rel="noreferrer"><FaYoutube aria-hidden="true"></FaYoutube> </a></li>
                 </ul>
-
             </Container>
-
         </footer>
     )
 }

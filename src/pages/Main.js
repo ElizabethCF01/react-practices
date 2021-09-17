@@ -13,9 +13,7 @@ const Main = () => {
             <Contact />
             <Footer />
             <BackToTop />
-
         </>
-
     )
 }
-export default Main 
+export default Main

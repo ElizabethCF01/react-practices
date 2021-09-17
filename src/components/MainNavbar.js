@@ -43,10 +43,8 @@ const MainNavbar = () => {
                     />
                     <span className='ws-name'>Photograph</span>
                 </Navbar.Brand>
-
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" className='menu-button' onClick={handleDeployment} />
                 <Navbar.Collapse id="responsive-navbar-nav">
-
                     <Nav>
                         <Nav.Link href="#home">HOME</Nav.Link>
                         <Nav.Link href="#contact">CONTACT</Nav.Link>

@@ -9,50 +9,44 @@ import img5 from '../images/img-9.jpg'
 
 const MyCarousel = () => {
     return (
-        <>
-            <Carousel prevLabel='' nextLabel='' className='carousel'>
-                <Carousel.Item>
-                    <img
-                        className="d-block"
-                        src={img1}
-                        alt="img"
-                    />
-                </Carousel.Item>
-                <Carousel.Item>
-                    <img
-                        className="d-block"
-                        src={img2}
-                        alt="img"
-                    />
+        <Carousel prevLabel='' nextLabel='' className='carousel'>
+            <Carousel.Item>
+                <img
+                    className="d-block"
+                    src={img1}
+                    alt="img"
+                />
+            </Carousel.Item>
+            <Carousel.Item>
+                <img
+                    className="d-block"
+                    src={img2}
+                    alt="img"
+                />
 
-                </Carousel.Item>
-                <Carousel.Item>
-                    <img
-                        className="d-block"
-                        src={img3}
-                        alt="img"
-                    />
-                </Carousel.Item>
-                <Carousel.Item>
-                    <img
-                        className="d-block"
-                        src={img4}
-                        alt="img"
-                    />
-                </Carousel.Item>
-                <Carousel.Item>
-                    <img
-                        className="d-block"
-                        src={img5}
-                        alt="img"
-                    />
-                </Carousel.Item>
-
-
-            </Carousel>
-
-        </>
-
+            </Carousel.Item>
+            <Carousel.Item>
+                <img
+                    className="d-block"
+                    src={img3}
+                    alt="img"
+                />
+            </Carousel.Item>
+            <Carousel.Item>
+                <img
+                    className="d-block"
+                    src={img4}
+                    alt="img"
+                />
+            </Carousel.Item>
+            <Carousel.Item>
+                <img
+                    className="d-block"
+                    src={img5}
+                    alt="img"
+                />
+            </Carousel.Item>
+        </Carousel>
     )
 }
 export default MyCarousel
