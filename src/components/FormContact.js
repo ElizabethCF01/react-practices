@@ -1,15 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-import { Form, Row, Col, Button } from 'react-bootstrap'
+import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
 
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
 const FormContact = ({ handleSubmit }) => {
 
+    const [rate, setRate] = useState('')
+    const [id, setId] = useState(0)
+
+    const Stars = (myid) => {
+        if (myid <= id) {
+            return <BsStarFill className='star'></BsStarFill>
+        } else {
+            return <BsStar className='star'></BsStar>
+        }
+    }
+
+    const handleStarClick = (e) => {
+        const liStar = e.currentTarget
+        setId(liStar.id)
+        setRate(liStar.getAttribute('data-star-value'))
+    }
+
+    const clearStars = () => {
+        setId(0)
+        setRate('')
+    }
     return (
 
         <div className="registry-form container">
-            <Form onSubmit={handleSubmit} id='myForm'>
+            <Form onSubmit={handleSubmit} onReset={clearStars} id='myForm'>
                 <Form.Group as={Row} className="mb-3" controlId="name">
                     <Form.Label column md={4}>
                         Name
@@ -80,15 +104,15 @@ const FormContact = ({ handleSubmit }) => {
                     </Form.Label>
                     <Col xs={9} md={5}>
                         <ul className=" d-flex star-bar mb-3 mt-2">
-                            <li className="mx-2"><BsStar className='star' data-star-value="DREADFUL" id="1"></BsStar></li>
-                            <li className="mx-2"><BsStar className='star' data-star-value="BAD" id="2"></BsStar></li>
-                            <li className="mx-2"><BsStar className='star' data-star-value="MEDIUM" id="3"></BsStar></li>
-                            <li className="mx-2"><BsStar className='star' data-star-value="GOOD" id="4"></BsStar></li>
-                            <li className="mx-2"><BsStar className='star' data-star-value="GREAT" id="5"></BsStar></li>
+                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="DREADFUL" id="1">{Stars(1)}</li>
+                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="BAD" id="2">{Stars(2)}</li>
+                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="MEDIUM" id="3">{Stars(3)}</li>
+                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="GOOD" id="4">{Stars(4)}</li>
+                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="GREAT" id="5">{Stars(5)}</li>
                         </ul>
                     </Col>
                     <Col>
-                        <div className=" rate"><span id="rate">NULL</span></div>
+                        <div className=" rate"><span id="rate">{rate}</span></div>
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3">

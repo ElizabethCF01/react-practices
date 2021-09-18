@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Navbar, Container, Nav } from 'react-bootstrap'
+
+import Navbar from 'react-bootstrap/Navbar'
+import Container from 'react-bootstrap/Container'
+import Nav from 'react-bootstrap/Nav'
+
 import logo from '../images/logo-extra.png'
 
 const MainNavbar = () => {
@@ -33,7 +37,7 @@ const MainNavbar = () => {
     }
 
     return (
-        <Navbar collapseOnSelect className='navbar' expand="md" bg={navBackground || BackG ? 'dark' : ''} variant="dark" fixed="top">
+        <Navbar collapseOnSelect onToggle={handleDeployment} className='navbar' expand="md" bg={navBackground || BackG ? 'dark' : ''} variant="dark" fixed="top">
             <Container>
                 <Navbar.Brand href="#home" className='d-flex align-items-center logo'>
                     <img
@@ -43,7 +47,7 @@ const MainNavbar = () => {
                     />
                     <span className='ws-name'>Photograph</span>
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" className='menu-button' onClick={handleDeployment} />
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" className='menu-button' />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav>
                         <Nav.Link href="#home">HOME</Nav.Link>

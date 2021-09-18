@@ -1,4 +1,5 @@
 import React from 'react'
+
 import Carousel from 'react-bootstrap/Carousel'
 
 import img1 from '../images/img-1.jpg'
@@ -9,7 +10,7 @@ import img5 from '../images/img-9.jpg'
 
 const MyCarousel = () => {
     return (
-        <Carousel prevLabel='' nextLabel='' className='carousel'>
+        <Carousel fade prevLabel='' nextLabel='' className='carousel'>
             <Carousel.Item>
                 <img
                     className="d-block"
@@ -23,7 +24,6 @@ const MyCarousel = () => {
                     src={img2}
                     alt="img"
                 />
-
             </Carousel.Item>
             <Carousel.Item>
                 <img
