@@ -1,19 +1,28 @@
 import React, { useState } from 'react'
 
 import Form from 'react-bootstrap/Form'
+import FormControl from 'react-bootstrap/FormControl'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
+import OverlayTrigger from "react-bootstrap/OverlayTrigger"
+import Tooltip from 'react-bootstrap/Tooltip'
 
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
-const FormContact = ({ handleSubmit }) => {
+const FormContact = () => {
 
     const [rate, setRate] = useState('')
-    const [id, setId] = useState(0)
+    const [starId, setStarId] = useState(0)
+
+    const [helpName, setHelpName] = useState(' ')
+    const [helpPhone, setHelpPhone] = useState(' ')
+
+    const tooltip = (<Tooltip id="tooltip">Please rate us</Tooltip>)
+    const [showtooltip, setShowtooltip] = useState(false);
 
     const Stars = (myid) => {
-        if (myid <= id) {
+        if (myid <= starId) {
             return <BsStarFill className='star'></BsStarFill>
         } else {
             return <BsStar className='star'></BsStar>
@@ -22,19 +31,84 @@ const FormContact = ({ handleSubmit }) => {
 
     const handleStarClick = (e) => {
         const liStar = e.currentTarget
-        setId(liStar.id)
+        setStarId(liStar.id)
         setRate(liStar.getAttribute('data-star-value'))
+        setShowtooltip(false)
     }
 
     const clearStars = () => {
-        setId(0)
+        setStarId(0)
         setRate('')
+    }
+    const clearInputs = () => {
+        document.getElementById('cliName').value = ''
+        document.getElementById('cliPhone').value = ''
+        document.getElementById('cliEmail').value = ''
+        document.getElementById('cliMessage').value = ''
+    }
+    const handleSubmit = (e) => {//=========================Submit
+        e.preventDefault()
+        if (starId === 0) {
+            console.log('No Submiited form')
+            setShowtooltip(true)
+        } else {
+            console.log('Submiited form')
+            clearStars()
+            clearInputs()
+        }
+    }
+    const handleChange = (e) => {//=========================BeforeSubmit
+        let inputId = e.currentTarget.id
+
+        if (inputId === 'cliName') {
+            const name = e.currentTarget
+            const regex = /^[a-zA-Z ]+$/
+            const words = 'Only Words'
+            const minlenght = 'Please lengthen this text to 2 charaters or more'
+            let value = name.value
+
+            if (!regex.test(value) && value.length !== 0) {
+                setHelpName(words)
+                name.value = value.replace(/[^a-z ]+/ig, '')
+                setTimeout(() => {
+                    setHelpName(' ')
+                }, 2000)
+            } else if (value.length < 2 && value.length !== 0) {
+                setHelpName(minlenght)
+                name.classList.add('invalid')
+            } else {
+                setHelpName(' ')
+                name.classList.remove('invalid')
+            }
+        }
+        if (inputId === 'cliPhone') {
+            const phone = e.currentTarget
+            const regex = /^[0-9 ]+$/
+            const digits = 'Only Digits'
+            const minlenght = 'Please lengthen this text to 6 charaters or more'
+            let value = phone.value
+
+            if (!regex.test(value) && value.length !== 0) {
+                setHelpPhone(digits)
+                phone.value = value.replace(/[^0-9 ]+/g, '')
+                setTimeout(() => {
+                    setHelpPhone(' ')
+                }, 2000)
+            } else if (value.length < 6 && value.length !== 0) {
+                setHelpPhone(minlenght)
+                phone.classList.add('invalid')
+            } else {
+                setHelpPhone(' ')
+                phone.classList.remove('invalid')
+            }
+        }
+
     }
     return (
 
         <div className="registry-form container">
             <Form onSubmit={handleSubmit} onReset={clearStars} id='myForm'>
-                <Form.Group as={Row} className="mb-3" controlId="name">
+                <Form.Group as={Row} className="mb-3" /**controlId="name" */>
                     <Form.Label column md={4}>
                         Name
                     </Form.Label>
@@ -46,12 +120,15 @@ const FormContact = ({ handleSubmit }) => {
                             maxLength="50"
                             pattern="^[a-zA-Z ]+$"
                             required
+                            id='cliName'
+                            onChange={handleChange}
                         />
-                        <Form.Text id="NameHelpBlock" muted>
+                        <Form.Text className='helpWarning' id="NameHelpBlock" muted className='ml-2'>
+                            {helpName}
                         </Form.Text>
                     </Col>
                 </Form.Group>
-                <Form.Group as={Row} className="mb-3" controlId="phone">
+                <Form.Group as={Row} className="mb-3" /*controlId="phone"*/>
                     <Form.Label column md={4}>
                         Phone
                     </Form.Label>
@@ -62,35 +139,40 @@ const FormContact = ({ handleSubmit }) => {
                             minLength="6"
                             maxLength="30"
                             pattern="^[0-9 ]+$"
+                            id='cliPhone'
+                            onChange={handleChange}
                         />
-                        <Form.Text id="phoneHelpBlock" muted>
-
+                        <Form.Text className='helpWarning' id="phoneHelpBlock" muted className='ml-2'>
+                            {helpPhone}
                         </Form.Text>
                     </Col>
                 </Form.Group>
-                <Form.Group as={Row} className="mb-3" controlId="email">
+                <Form.Group as={Row} className="mb-3" >
                     <Form.Label column md={4}>
                         Email
                     </Form.Label>
                     <Col md={8}>
                         <Form.Control
+                            id='cliEmail'
                             type="email"
                             placeholder="name@email.com"
                             minLength="8"
                             maxLength="250"
                             required
                         />
+                        <FormControl.Feedback />
                         <Form.Text id="phoneHelpBlock" muted>
 
                         </Form.Text>
                     </Col>
                 </Form.Group>
-                <Form.Group as={Row} className="mb-3" controlId="message">
+                <Form.Group as={Row} className="mb-3" >
                     <Form.Label column md={4}>
                         Message
                     </Form.Label>
                     <Col md={8}>
                         <Form.Control
+                            id='cliMessage'
                             as="textarea"
                             placeholder="Leave a message here"
                             style={{ height: '80px' }}
@@ -98,18 +180,20 @@ const FormContact = ({ handleSubmit }) => {
                         />
                     </Col>
                 </Form.Group>
-                <Form.Group as={Row} className="mb-3 stars" controlId="star-list">
+                <Form.Group as={Row} className="mb-3 stars" controlId="star-list" >
                     <Form.Label column md={4}>
                         Rate Us
                     </Form.Label>
                     <Col xs={9} md={5}>
-                        <ul className=" d-flex star-bar mb-3 mt-2">
-                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="DREADFUL" id="1">{Stars(1)}</li>
-                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="BAD" id="2">{Stars(2)}</li>
-                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="MEDIUM" id="3">{Stars(3)}</li>
-                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="GOOD" id="4">{Stars(4)}</li>
-                            <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="GREAT" id="5">{Stars(5)}</li>
-                        </ul>
+                        <OverlayTrigger placement="top" show={showtooltip} overlay={tooltip}>
+                            <ul className=" d-flex star-bar mb-3 mt-2">
+                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="DREADFUL" id="1">{Stars(1)}</li>
+                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="BAD" id="2">{Stars(2)}</li>
+                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="MEDIUM" id="3">{Stars(3)}</li>
+                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="GOOD" id="4">{Stars(4)}</li>
+                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="GREAT" id="5">{Stars(5)}</li>
+                            </ul>
+                        </OverlayTrigger>
                     </Col>
                     <Col>
                         <div className=" rate"><span id="rate">{rate}</span></div>

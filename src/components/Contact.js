@@ -8,11 +8,6 @@ import Container from 'react-bootstrap/Container'
 
 const Contact = () => {
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log('Hello')
-    }
-
     return (
         <section className='registry py-5' id='contact'>
             <Container className="registry-form">
@@ -28,7 +23,7 @@ const Contact = () => {
                     </Col>
                     <Col md={{ span: 8, order: 1 }}>
                         <h3 className="mb-3">Registry Form</h3>
-                        <FormContact handleSubmit={handleSubmit} />
+                        <FormContact /*handleSubmit={handleSubmit} */ />
                     </Col>
                 </Row>
             </Container>
