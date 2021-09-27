@@ -10,7 +10,7 @@ import img5 from '../images/img-9.jpg'
 
 const MyCarousel = () => {
     return (
-        <Carousel fade prevLabel='' nextLabel='' className='carousel'>
+        <Carousel prevLabel='' nextLabel='' className='carousel'>
             <Carousel.Item>
                 <img
                     className="d-block"

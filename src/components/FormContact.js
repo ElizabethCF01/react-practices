@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useReducer } from 'react'
 import axios from 'axios'
 
+// Bootstrap components
 import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import Row from 'react-bootstrap/Row'
@@ -8,14 +9,23 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger"
 import Tooltip from 'react-bootstrap/Tooltip'
+import Alert from 'react-bootstrap/Alert'
+
 
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
+import formReducer from './FormReducer'
+
+export const initialFormState = {
+    name: '',
+    phone: '',
+    email: '',
+    message: ''
+}
+
 const FormContact = () => {
-    const name = document.getElementById('cliName')
-    const phone = document.getElementById('cliPhone')
-    const email = document.getElementById('cliEmail')
-    const message = document.getElementById('cliMessage')
+
+    const [formState, dispatch] = useReducer(formReducer, initialFormState)
 
     const [rate, setRate] = useState('')
     const [starId, setStarId] = useState(0)
@@ -26,6 +36,8 @@ const FormContact = () => {
     const tooltip = (<Tooltip id="tooltip">Please rate us</Tooltip>)
     const [showtooltip, setShowtooltip] = useState(false);
 
+    const [alert, setAlert] = useState({ show: false, variant: '', text: '' })
+
     const Stars = (myid) => {
         if (myid <= starId) {
             return <BsStarFill className='star'></BsStarFill>
@@ -34,86 +46,99 @@ const FormContact = () => {
         }
     }
 
-    const handleStarClick = (e) => {
+    const handleStarClick = (e) => {//=========================Clik on Stars===
         const liStar = e.currentTarget
         setStarId(liStar.id)
         setRate(liStar.getAttribute('data-star-value'))
         setShowtooltip(false)
     }
-
-    const clearStars = () => {
+    const clearForm = () => {//=========================Clear Imputs and stars===
+        dispatch({
+            type: 'Clear',
+        })
         setStarId(0)
         setRate('')
         setShowtooltip(false)
     }
-    const clearInputs = () => {
-        name.value = ''
-        phone.value = ''
-        email.value = ''
-        message.value = ''
-    }
-    const handleSubmit = (e) => {//=========================Submit
+    const handleSubmit = (e) => {//=========================Submit===
         e.preventDefault()
         if (starId === 0) {
-            console.log('No Submiited form')
+            console.log('No Submited form')
             setShowtooltip(true)
         } else {
-            console.log('Submiited form')
-            clearStars()
-            clearInputs()
+            formState.calification = starId
+            const data = JSON.stringify(formState)
+            const url = 'http://localhost:4000/api/messages'
+
+            console.log('Submited form')
+            console.log(data)
+            const headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+            axios.post(url, data, { headers }).then(res => {
+                console.log(res)
+                clearForm()
+                setAlert({ show: true, variant: 'success', text: res.data.message })
+            }).catch(err => {
+                console.log(err)
+                setAlert({ show: true, variant: 'danger', text: 'Something was wrong' })
+            })
         }
     }
-    const handleChange = (e) => {//=========================BeforeSubmit
-        let inputId = e.currentTarget.id
+    const handleChange = (e) => {//========================= handle Change===
+        let Field = e.target.name
+        let Payload = e.target.value
+        let input = e.target
 
-        if (inputId === 'cliName') {
-            //const name = e.currentTarget
+        if (Field === 'name') {
             const regex = /^[a-zA-Z ]+$/
             const words = 'Only Words'
             const minlenght = 'Please lengthen this text to 2 charaters or more'
-            let value = name.value
 
-            if (!regex.test(value) && value.length !== 0) {
+            if (!regex.test(Payload) && Payload.length !== 0) {
                 setHelpName(words)
-                name.value = value.replace(/[^a-z ]+/ig, '')
+                Payload = e.target.value.replace(/[^a-z ]+/ig, '')
                 setTimeout(() => {
-                    setHelpName(' ')
+                    setHelpName('')
                 }, 2000)
-            } else if (value.length < 2 && value.length !== 0) {
+            } else if (Payload.length < 2 && Payload.length !== 0) {
                 setHelpName(minlenght)
-                name.classList.add('invalid')
+                input.classList.add('invalid')
             } else {
-                setHelpName(' ')
-                name.classList.remove('invalid')
+                setHelpName('')
+                input.classList.remove('invalid')
             }
-        }
-        if (inputId === 'cliPhone') {
-            //const phone = e.currentTarget
+        } else if (Field === 'phone') {
             const regex = /^[0-9 ]+$/
             const digits = 'Only Digits'
             const minlenght = 'Please lengthen this text to 6 charaters or more'
-            let value = phone.value
 
-            if (!regex.test(value) && value.length !== 0) {
+            if (!regex.test(Payload) && Payload.length !== 0) {
                 setHelpPhone(digits)
-                phone.value = value.replace(/[^0-9 ]+/g, '')
+                Payload = e.target.value.replace(/[^0-9 ]+/g, '')
                 setTimeout(() => {
                     setHelpPhone(' ')
                 }, 2000)
-            } else if (value.length < 6 && value.length !== 0) {
+            } else if (Payload.length < 6 && Payload.length !== 0) {
                 setHelpPhone(minlenght)
-                phone.classList.add('invalid')
+                input.classList.add('invalid')
             } else {
                 setHelpPhone(' ')
-                phone.classList.remove('invalid')
+                input.classList.remove('invalid')
             }
         }
 
+        dispatch({
+            type: 'Input text',
+            field: Field,
+            payload: Payload
+        })
     }
     return (
 
         <div className="registry-form container">
-            <Form onSubmit={handleSubmit} onReset={clearStars} id='myForm'>
+            <Form onSubmit={handleSubmit} onReset={clearForm} id='myForm'>
                 <Form.Group as={Row} className="mb-3" /**controlId="name" */>
                     <Form.Label column md={4}>
                         Name
@@ -127,7 +152,9 @@ const FormContact = () => {
                             pattern="^[a-zA-Z ]+$"
                             required
                             id='cliName'
-                            onChange={handleChange}
+                            name='name'
+                            value={formState.name}
+                            onChange={(e) => handleChange(e)}
                         />
                         <Form.Text className='helpWarning' id="NameHelpBlock" muted className='ml-2'>
                             {helpName}
@@ -146,7 +173,9 @@ const FormContact = () => {
                             maxLength="30"
                             pattern="^[0-9 ]+$"
                             id='cliPhone'
-                            onChange={handleChange}
+                            name='phone'
+                            value={formState.phone}
+                            onChange={(e) => handleChange(e)}
                         />
                         <Form.Text className='helpWarning' id="phoneHelpBlock" muted className='ml-2'>
                             {helpPhone}
@@ -165,6 +194,9 @@ const FormContact = () => {
                             minLength="8"
                             maxLength="250"
                             required
+                            name='email'
+                            value={formState.email}
+                            onChange={(e) => handleChange(e)}
                         />
                         <FormControl.Feedback />
                         <Form.Text id="emailHelpBlock" style={{ color: '#6c757d !important' }}>
@@ -183,6 +215,9 @@ const FormContact = () => {
                             placeholder="Leave a message here"
                             style={{ height: '80px' }}
                             required
+                            name='message'
+                            value={formState.message}
+                            onChange={(e) => handleChange(e)}
                         />
                     </Col>
                 </Form.Group>
@@ -212,9 +247,23 @@ const FormContact = () => {
                     </Col>
                 </Form.Group>
             </Form>
+            {(() => {
+                if (alert.show) {
+                    return (
+                        <Alert variant={alert.variant} >
+                            <p>{alert.text}</p>
+                            <div className="d-flex justify-content-end">
+                                <Button onClick={() => setAlert({ show: false })} variant={`outline-${alert.variant}`}>
+                                    Close
+                                </Button>
+                            </div>
+                        </Alert>
+                    )
+                }
+            })()}
+
         </div >
     )
-
 }
 
 export default FormContact
