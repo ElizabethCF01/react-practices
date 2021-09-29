@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import Main from '../pages/Main'
 import NotFound from './NotFound.js'
+//import ScrollToTop from './ScrollToTop.js'
 
 const App = () => (
     <BrowserRouter>
