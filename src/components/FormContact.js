@@ -9,18 +9,13 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger"
 import Tooltip from 'react-bootstrap/Tooltip'
-import Alert from 'react-bootstrap/Alert'
+//import Alert from 'react-bootstrap/Alert'
+import AlertResponse from './AlertResponse'
 
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
-import formReducer from './FormReducer'
-
-export const initialFormState = {
-    name: '',
-    phone: '',
-    email: '',
-    message: ''
-}
+import formReducer, { initialFormState } from './FormReducer'
+//import { initialFormState } from "./FormReducer"
 
 const FormContact = () => {
 
@@ -28,9 +23,6 @@ const FormContact = () => {
 
     const [rate, setRate] = useState('')
     const [starId, setStarId] = useState(0)
-
-    const [help, setHelp] = useState({ name: '', phone: '' })
-    //const [helpPhone, setHelpPhone] = useState('')
 
     const tooltip = (<Tooltip id="tooltip">Please rate us</Tooltip>)
     const [showtooltip, setShowtooltip] = useState(false);
@@ -52,7 +44,7 @@ const FormContact = () => {
     }
     const clearForm = () => {//=========================Clear Imputs and stars===
         dispatch({
-            type: 'Clear',
+            type: 'ON_RESET'
         })
         setStarId(0)
         setRate('')
@@ -62,8 +54,9 @@ const FormContact = () => {
         e.preventDefault()
         if (starId === 0) setShowtooltip(true)
         else {
-            formState.calification = starId
-            const data = JSON.stringify(formState)
+            formState.data.calification = starId
+            console.log(formState.data)
+            const data = JSON.stringify(formState.data)
             const url = 'http://localhost:4000/api/messages'
 
             const headers = {
@@ -82,49 +75,28 @@ const FormContact = () => {
 
     const handleChange = (e) => {//========================= handle Change===
         let input = e.target
+        /*
         let Field = input.name
         let Payload = input.value
-
-        if (Field === 'name') {
-            Payload = valid(input, /^[a-zA-Z ]+$/, /[^a-z ]+/ig, 'Only Words', 2, 1)
-        } else
-            if (Field === 'phone') {
-                Payload = valid(input, /^[0-9 ]+$/, /[^0-9 ]+/g, 'Only Digits', 6, 0)
+        
+                if (Field === 'name') {
+                    Payload = valid(input, /^[a-zA-Z ]+$/, /[^a-z ]+/ig, 'Only Words', 2, true)
+                } else
+                    if (Field === 'phone') {
+                        Payload = valid(input, /^[0-9 ]+$/, /[^0-9 ]+/g, 'Only Digits', 6)
+                    }*/
+        dispatch({
+            type: 'ON_CHANGE',
+            data: {
+                input: input,
+                field: input.name,
+                payload: input.value
             }
 
-        dispatch({
-            type: 'Input text',
-            field: Field,
-            payload: Payload
         })
-    }
-    function valid(input, regex, regexreplace, typeHelp, min, n) {
-        let value = input.value
-        const minlenght = 'Please lengthen this text to ' + min + ' charaters or more'
-
-        if (value.match(regex) == null) {
-            setHelp({ name: typeHelp, phone: typeHelp })
-            value = value.replace(regexreplace, '')
-            setTimeout(() => {
-                setHelp({ name: '', phone: '' })
-                input.classList.remove('invalid')
-            }, 2000)
-        }
-        else if (value.length < min && value.length !== 0) {
-            setHelp({ name: minlenght, phone: minlenght })
-            input.classList.add('invalid')
-        } else {
-            setHelp({ name: '', phone: '' })
-            input.classList.remove('invalid')
-        }
-        if (n === 1) setHelp((prev) => ({ ...prev, phone: '' }))
-        else setHelp((prev) => ({ ...prev, name: '' }))
-
-        return value
     }
 
     return (
-
         <div className="registry-form container">
             <Form onSubmit={handleSubmit} onReset={clearForm} id='myForm'>
                 <Form.Group as={Row} className="mb-3" /**controlId="name" */>
@@ -140,11 +112,11 @@ const FormContact = () => {
                             pattern="^[a-zA-Z ]+$"
                             required
                             name='name'
-                            value={formState.name}
+                            value={formState.data.name}
                             onChange={(e) => handleChange(e)}
                         />
                         <Form.Text className='helpWarning' id="NameHelpBlock" muted className='ml-2'>
-                            {help.name}
+                            {formState.help.name}
                         </Form.Text>
                     </Col>
                 </Form.Group>
@@ -160,11 +132,11 @@ const FormContact = () => {
                             maxLength="30"
                             pattern="^[0-9 ]+$"
                             name='phone'
-                            value={formState.phone}
+                            value={formState.data.phone}
                             onChange={(e) => handleChange(e)}
                         />
                         <Form.Text className='helpWarning' id="phoneHelpBlock" muted className='ml-2'>
-                            {help.phone}
+                            {formState.help.phone}
                         </Form.Text>
                     </Col>
                 </Form.Group>
@@ -180,7 +152,7 @@ const FormContact = () => {
                             maxLength="250"
                             required
                             name='email'
-                            value={formState.email}
+                            value={formState.data.email}
                             onChange={(e) => handleChange(e)}
                         />
                         <FormControl.Feedback />
@@ -200,7 +172,7 @@ const FormContact = () => {
                             style={{ height: '80px' }}
                             required
                             name='message'
-                            value={formState.message}
+                            value={formState.data.message}
                             onChange={(e) => handleChange(e)}
                         />
                     </Col>
@@ -232,16 +204,9 @@ const FormContact = () => {
                 </Form.Group>
             </Form>
             {alert.show &&
-                <Alert variant={alert.variant} >
-                    <p>{alert.text}</p>
-                    <div className="d-flex justify-content-end">
-                        <Button onClick={() => setAlert({ show: false })} variant={`outline-${alert.variant}`}>
-                            Close
-                        </Button>
-                    </div>
-                </Alert>
+                <AlertResponse alertR={alert} setAlertR={setAlert}>
+                </AlertResponse>
             }
-
         </div >
     )
 }

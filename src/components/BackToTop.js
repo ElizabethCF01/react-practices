@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import { FaArrowCircleUp } from 'react-icons/fa'
-/*
-import { Link } from 'react-router-dom'
 
+import { Link } from 'react-router-dom'
+/*
 const BackToTop = () => {
     return (
 
@@ -50,9 +50,9 @@ const BackToTop = () => {
     return (
         <div className="scroll-to-top">
             {isVisible &&
-                <div className="up" onClick={scrollToTop}>
+                <Link className="up" to='/main#home' onClick={scrollToTop}>
                     <FaArrowCircleUp aria-hidden="true"> </FaArrowCircleUp>
-                </div>}
+                </Link>}
         </div>
     );
 }

@@ -52,7 +52,7 @@ const MainNavbar = () => {
                     <Nav>
                         <Nav.Link href="#home">HOME</Nav.Link>
                         <Nav.Link href="#contact">CONTACT</Nav.Link>
-                        <Nav.Link href="#contact">SOMETHING</Nav.Link>
+                        <Nav.Link href="#">SOMETHING</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

@@ -23,7 +23,7 @@ const Contact = () => {
                     </Col>
                     <Col md={{ span: 8, order: 1 }}>
                         <h3 className="mb-3">Registry Form</h3>
-                        <FormContact /*handleSubmit={handleSubmit} */ />
+                        <FormContact />
                     </Col>
                 </Row>
             </Container>
