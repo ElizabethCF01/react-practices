@@ -12,8 +12,6 @@ export const initialFormState = {
   }
 }
 
-let h = ''
-
 const formReducer = (state, action) => {
   switch (action.type) {
     case 'ON_CHANGE':
@@ -23,10 +21,11 @@ const formReducer = (state, action) => {
             ...state,
             data: {
               ...state.data,
-              name: nameValid(action.data.input)
+              name: nameValid(action.data.input)[0]
             },
             help: {
-              name: nameValid(action.data.input, 1)
+              ...state.help,
+              name: nameValid(action.data.input)[1]
             }
           }
         case 'phone':
@@ -34,10 +33,11 @@ const formReducer = (state, action) => {
             ...state,
             data: {
               ...state.data,
-              phone: phoneValid(action.data.input)
+              phone: phoneValid(action.data.input)[0]
             },
             help: {
-              phone: h
+              ...state.help,
+              phone: phoneValid(action.data.input)[1]
             }
           }
         default:
@@ -55,68 +55,51 @@ const formReducer = (state, action) => {
       throw new Error()
   }
 }
-function nameValid(input, isHelp) {
+function nameValid(input) {
   let value = input.value
   const regex = /^[a-zA-Z ]+$/
   const helpType = 'Only Words'
   const minlenght = 'Please lengthen this text to 2 charaters or more'
   let helpMe = ''
 
-  if (value.match(regex) == null) {
-    console.warn(helpType)
+  if (value.match(regex) === null && value.length !== 0) {
+    //console.warn(helpType)
     helpMe = helpType
-    //setHelp({ name: typeHelp, phone: typeHelp })
     value = value.replace(/[^a-z ]+/ig, '')
-    setTimeout(() => {
-      helpMe = ''
-      // setHelp({ name: '', phone: '' })
-    }, 2000)
   }
   else if (value.length < 2 && value.length !== 0) {
-    console.warn(minlenght)
+    //console.warn(minlenght)
     helpMe = minlenght
-    //setHelp({ name: minlenght, phone: minlenght })
     input.classList.add('invalid')
   } else {
-    //setHelp({ name: '', phone: '' })
     helpMe = ''
     input.classList.remove('invalid')
   }
-  if (isHelp) {
-    return helpMe
-  }
-  return value
+  return [value, helpMe]
 }
 
 function phoneValid(input) {
   let value = input.value
+  let helpMe = ''
   const regex = /^[0-9 ]+$/
   const minlenght = 'Please lengthen this text to 6 charaters or more'
   const helpType = 'Only Digits'
 
-  if (value.match(regex) == null) {
-    console.warn(helpType)
-    h = helpType
-    //setHelp({ name: typeHelp, phone: typeHelp })
+  if (value.match(regex) === null && value.length !== 0) {
+    //console.warn(helpType)
+    helpMe = helpType
     value = value.replace(/[^0-9 ]+/g, '')
-    setTimeout(() => {
-      // setHelp({ name: '', phone: '' })
-      h = ''
-    }, 2000)
   }
   else if (value.length < 6 && value.length !== 0) {
-    console.warn(minlenght)
-    h = minlenght
-    //setHelp({ name: minlenght, phone: minlenght })
+    helpMe = minlenght
     input.classList.add('invalid')
   } else {
-    //setHelp({ name: '', phone: '' })
+    helpMe = ''
     input.classList.remove('invalid')
-    h = ''
   }
   //if (isName) setHelp((prev) => ({ ...prev, phone: '' }))
   //else setHelp((prev) => ({ ...prev, name: '' }))
-  return value
+  return [value, helpMe]
 }
 export default formReducer
 

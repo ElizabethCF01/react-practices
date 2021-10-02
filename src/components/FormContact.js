@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react'
+import React, { useState, useReducer, useEffect } from 'react'
 import axios from 'axios'
 
 // Bootstrap components
@@ -9,13 +9,12 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger"
 import Tooltip from 'react-bootstrap/Tooltip'
-//import Alert from 'react-bootstrap/Alert'
+
 import AlertResponse from './AlertResponse'
 
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
 import formReducer, { initialFormState } from './FormReducer'
-//import { initialFormState } from "./FormReducer"
 
 const FormContact = () => {
 
@@ -26,6 +25,10 @@ const FormContact = () => {
 
     const tooltip = (<Tooltip id="tooltip">Please rate us</Tooltip>)
     const [showtooltip, setShowtooltip] = useState(false);
+
+    const [helpName, setHelpName] = useState('')
+    const [helpPhone, setHelpPhone] = useState('')
+
 
     const [alert, setAlert] = useState({ show: false, variant: '', text: '' })
 
@@ -76,15 +79,15 @@ const FormContact = () => {
     const handleChange = (e) => {//========================= handle Change===
         let input = e.target
         /*
-        let Field = input.name
-        let Payload = input.value
-        
-                if (Field === 'name') {
-                    Payload = valid(input, /^[a-zA-Z ]+$/, /[^a-z ]+/ig, 'Only Words', 2, true)
-                } else
-                    if (Field === 'phone') {
-                        Payload = valid(input, /^[0-9 ]+$/, /[^0-9 ]+/g, 'Only Digits', 6)
-                    }*/
+               let Field = input.name
+               let Payload = input.value
+               
+                       if (Field === 'name') {
+                           Payload = valid(input, /^[a-zA-Z ]+$/, /[^a-z ]+/ig, 'Only Words', 2, true)
+                       } else
+                           if (Field === 'phone') {
+                               Payload = valid(input, /^[0-9 ]+$/, /[^0-9 ]+/g, 'Only Digits', 6)
+                           }*/
         dispatch({
             type: 'ON_CHANGE',
             data: {
@@ -92,8 +95,32 @@ const FormContact = () => {
                 field: input.name,
                 payload: input.value
             }
-
         })
+        /*setH(formState.help.phone)
+
+        if (input.name === 'phone' && h === 'Only Digits') {
+            setTimeout(() => {
+                setH('')
+            }, 2000)
+        }*/
+    }
+    const handleHelpName = () => {
+        setHelpName(formState.help.name)
+
+        if (formState.help.name === 'Only Words') {
+            setTimeout(() => {
+                setHelpName('')
+            }, 2000)
+        }
+    }
+    const handleHelpPhone = () => {
+        setHelpPhone(formState.help.phone)
+
+        if (formState.help.phone === 'Only Digits') {
+            setTimeout(() => {
+                setHelpPhone('')
+            }, 2000)
+        }
     }
 
     return (
@@ -114,9 +141,10 @@ const FormContact = () => {
                             name='name'
                             value={formState.data.name}
                             onChange={(e) => handleChange(e)}
+                            onKeyUp={handleHelpName}
                         />
                         <Form.Text className='helpWarning' id="NameHelpBlock" muted className='ml-2'>
-                            {formState.help.name}
+                            {helpName}
                         </Form.Text>
                     </Col>
                 </Form.Group>
@@ -134,9 +162,10 @@ const FormContact = () => {
                             name='phone'
                             value={formState.data.phone}
                             onChange={(e) => handleChange(e)}
+                            onKeyUp={handleHelpPhone}
                         />
                         <Form.Text className='helpWarning' id="phoneHelpBlock" muted className='ml-2'>
-                            {formState.help.phone}
+                            {helpPhone}
                         </Form.Text>
                     </Col>
                 </Form.Group>
@@ -204,8 +233,7 @@ const FormContact = () => {
                 </Form.Group>
             </Form>
             {alert.show &&
-                <AlertResponse alertR={alert} setAlertR={setAlert}>
-                </AlertResponse>
+                <AlertResponse alertR={alert} setAlertR={setAlert}></AlertResponse>
             }
         </div >
     )
