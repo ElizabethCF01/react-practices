@@ -1,105 +1,112 @@
+export const RESET_FORM = 'RESET'
+export const CHANGE_NAME_VALUE = 'NAME'
+export const CHANGE_PHONE_VALUE = 'PHONE'
+export const CHANGE_EMAIL_VALUE = 'EMAIL'
+export const CHANGE_MESSAGE_VALUE = 'MESSAGE'
+export const CHANGE_STARS_VALUE = 'STARS'
 
 export const initialFormState = {
   data: {
     name: '',
     phone: '',
     email: '',
-    message: ''
+    message: '',
+    calification: 0
   },
-  help: {
+  labels: {
     name: '',
-    phone: ''
+    phone: '',
+    email: '',
+    message: '',
+    calification: ''
+  },
+  tooltips: {
+    name: '',
+    phone: '',
+    email: '',
+    message: '',
+    calification: ''
   }
 }
 
 const formReducer = (state, action) => {
   switch (action.type) {
-    case 'ON_CHANGE':
-      switch (action.data.field) {
-        case 'name':
-          return {
-            ...state,
-            data: {
-              ...state.data,
-              name: nameValid(action.data.input)[0]
-            },
-            help: {
-              ...state.help,
-              name: nameValid(action.data.input)[1]
-            }
-          }
-        case 'phone':
-          return {
-            ...state,
-            data: {
-              ...state.data,
-              phone: phoneValid(action.data.input)[0]
-            },
-            help: {
-              ...state.help,
-              phone: phoneValid(action.data.input)[1]
-            }
-          }
-        default:
-          return {
-            ...state,
-            data: {
-              ...state.data,
-              [action.data.field]: action.data.payload
-            }
-          }
+    case CHANGE_NAME_VALUE:
+      if (nameOnlyLetters(state, action.value)) {
+        state.data.name = action.value
       }
-    case 'ON_RESET':
-      return initialFormState
+      return { ...state }
+    case CHANGE_PHONE_VALUE:
+      if (phoneOnlyNumbers(state, action.value)) {
+        state.data.phone = action.value
+      }
+      return { ...state }
+    case CHANGE_EMAIL_VALUE:
+      state.data.email = action.value
+      return { ...state }
+    case CHANGE_MESSAGE_VALUE:
+      state.data.message = action.value
+      return { ...state }
+    case CHANGE_STARS_VALUE:
+      return { ...state }
+    case 'RESET':
+      state = initialFormState
+      return { ...state }
     default:
-      throw new Error()
+      return { ...state }
   }
 }
-function nameValid(input) {
-  let value = input.value
-  const regex = /^[a-zA-Z ]+$/
-  const helpType = 'Only Words'
+const nameOnlyLetters = (state, value = '') => {
+  const regex = /^[a-zA-Z]+$/
+  const helpType = 'Only words allowed'
+
+  if (value.match(regex) === null && value.length !== 0) {
+    state.labels.name = helpType
+    return false
+  }
+  return true
+}
+
+const nameMinValue = (state, value = '') => {
   const minlenght = 'Please lengthen this text to 2 charaters or more'
-  let helpMe = ''
-
-  if (value.match(regex) === null && value.length !== 0) {
-    //console.warn(helpType)
-    helpMe = helpType
-    value = value.replace(/[^a-z ]+/ig, '')
+  if (value.length < 2) {
+    state.labels.name = minlenght
+    return false
   }
-  else if (value.length < 2 && value.length !== 0) {
-    //console.warn(minlenght)
-    helpMe = minlenght
-    input.classList.add('invalid')
-  } else {
-    helpMe = ''
-    input.classList.remove('invalid')
-  }
-  return [value, helpMe]
+  return true
 }
 
-function phoneValid(input) {
-  let value = input.value
-  let helpMe = ''
-  const regex = /^[0-9 ]+$/
+const phoneMinValue = (state, value) => {
   const minlenght = 'Please lengthen this text to 6 charaters or more'
-  const helpType = 'Only Digits'
+  if (value.length < 6 && value.length !== 0) {
+    state.labels.phone = minlenght
+    return false
+  }
+  return true
+}
+
+const phoneOnlyNumbers = (state, value) => {
+  const regex = /^[0-9]+$/
+  const helpType = 'Only digits allowed'
 
   if (value.match(regex) === null && value.length !== 0) {
-    //console.warn(helpType)
-    helpMe = helpType
+    state.labels.phone = helpType
     value = value.replace(/[^0-9 ]+/g, '')
+    return false
   }
-  else if (value.length < 6 && value.length !== 0) {
-    helpMe = minlenght
-    input.classList.add('invalid')
-  } else {
-    helpMe = ''
-    input.classList.remove('invalid')
-  }
-  //if (isName) setHelp((prev) => ({ ...prev, phone: '' }))
-  //else setHelp((prev) => ({ ...prev, name: '' }))
-  return [value, helpMe]
+  return true
 }
+
+const validateEmail = (state, value) => {
+  const regex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
+  const helpType = 'Invalid email'
+
+  if (value.match(regex) === null && value.length !== 0) {
+    state.labels.email = helpType
+    return false
+  }
+  return true
+}
+
 export default formReducer
 

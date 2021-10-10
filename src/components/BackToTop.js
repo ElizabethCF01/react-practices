@@ -3,24 +3,6 @@ import React, { useEffect, useState } from "react";
 import { FaArrowCircleUp } from 'react-icons/fa'
 
 import { Link } from 'react-router-dom'
-/*
-const BackToTop = () => {
-    return (
-
-        <Link to={{
-            pathname: "/main",
-            //search: "?sort=name",
-            hash: "#home",
-            state: { fromDashboard: true }
-        }
-        }
-            className="up">
-            <FaArrowCircleUp aria-hidden="true"> </FaArrowCircleUp>
-        </Link>
-    )
-}
-export default BackToTop
-*/
 
 const BackToTop = () => {
     const [isVisible, setIsVisible] = useState(false);

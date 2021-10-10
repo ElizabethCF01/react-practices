@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from 'react'
+import React, { useState, useReducer } from 'react'
 import axios from 'axios'
 
 // Bootstrap components
@@ -11,23 +11,24 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger"
 import Tooltip from 'react-bootstrap/Tooltip'
 
 import AlertResponse from './AlertResponse'
-
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
+// Reducers
 import formReducer, { initialFormState } from './FormReducer'
+
+// Constants
+
+import { RESET_FORM } from './FormReducer'
 
 const FormContact = () => {
 
-    const [formState, dispatch] = useReducer(formReducer, initialFormState)
+    const [state, dispatch] = useReducer(formReducer, initialFormState)
 
     const [rate, setRate] = useState('')
     const [starId, setStarId] = useState(0)
 
     const tooltip = (<Tooltip id="tooltip">Please rate us</Tooltip>)
     const [showtooltip, setShowtooltip] = useState(false);
-
-    const [helpName, setHelpName] = useState('')
-    const [helpPhone, setHelpPhone] = useState('')
 
 
     const [alert, setAlert] = useState({ show: false, variant: '', text: '' })
@@ -45,21 +46,13 @@ const FormContact = () => {
         setRate(liStar.getAttribute('data-star-value'))
         setShowtooltip(false)
     }
-    const clearForm = () => {//=========================Clear Imputs and stars===
-        dispatch({
-            type: 'ON_RESET'
-        })
-        setStarId(0)
-        setRate('')
-        setShowtooltip(false)
-    }
     const handleSubmit = (e) => {//=========================Submit===
         e.preventDefault()
         if (starId === 0) setShowtooltip(true)
         else {
-            formState.data.calification = starId
-            console.log(formState.data)
-            const data = JSON.stringify(formState.data)
+            state.data.calification = starId
+            console.log(state.data)
+            const data = JSON.stringify(state.data)
             const url = 'http://localhost:4000/api/messages'
 
             const headers = {
@@ -67,7 +60,6 @@ const FormContact = () => {
                 'Content-Type': 'application/json'
             }
             axios.post(url, data, { headers }).then(res => {
-                clearForm()
                 setAlert({ show: true, variant: 'success', text: res.data.message })
             }).catch(err => {
                 console.log(err)
@@ -77,55 +69,16 @@ const FormContact = () => {
     }
 
     const handleChange = (e) => {//========================= handle Change===
-        let input = e.target
-        /*
-               let Field = input.name
-               let Payload = input.value
-               
-                       if (Field === 'name') {
-                           Payload = valid(input, /^[a-zA-Z ]+$/, /[^a-z ]+/ig, 'Only Words', 2, true)
-                       } else
-                           if (Field === 'phone') {
-                               Payload = valid(input, /^[0-9 ]+$/, /[^0-9 ]+/g, 'Only Digits', 6)
-                           }*/
+        const input = e.target
         dispatch({
-            type: 'ON_CHANGE',
-            data: {
-                input: input,
-                field: input.name,
-                payload: input.value
-            }
+            type: input.name.toUpperCase(),
+            value: input.value
         })
-        /*setH(formState.help.phone)
-
-        if (input.name === 'phone' && h === 'Only Digits') {
-            setTimeout(() => {
-                setH('')
-            }, 2000)
-        }*/
-    }
-    const handleHelpName = () => {
-        setHelpName(formState.help.name)
-
-        if (formState.help.name === 'Only Words') {
-            setTimeout(() => {
-                setHelpName('')
-            }, 2000)
-        }
-    }
-    const handleHelpPhone = () => {
-        setHelpPhone(formState.help.phone)
-
-        if (formState.help.phone === 'Only Digits') {
-            setTimeout(() => {
-                setHelpPhone('')
-            }, 2000)
-        }
     }
 
     return (
         <div className="registry-form container">
-            <Form onSubmit={handleSubmit} onReset={clearForm} id='myForm'>
+            <Form onSubmit={handleSubmit} onReset={() => dispatch({ type: RESET_FORM })} id='myForm'>
                 <Form.Group as={Row} className="mb-3" /**controlId="name" */>
                     <Form.Label column md={4}>
                         Name
@@ -136,16 +89,18 @@ const FormContact = () => {
                             placeholder="Your name"
                             minLength="2"
                             maxLength="50"
-                            pattern="^[a-zA-Z ]+$"
                             required
                             name='name'
-                            value={formState.data.name}
-                            onChange={(e) => handleChange(e)}
-                            onKeyUp={handleHelpName}
+                            value={state.data.name}
+                            onChange={handleChange}
+                            isInvalid={state.labels.name === '' ? false : true}
                         />
-                        <Form.Text className='helpWarning' id="NameHelpBlock" muted className='ml-2'>
-                            {helpName}
-                        </Form.Text>
+                        <Form.Control.Feedback type='invalid'
+                            className='helpWarning ml-2'
+                            id="NameHelpBlock"
+                        >
+                            {state.labels.name}
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" /*controlId="phone"*/>
@@ -158,15 +113,17 @@ const FormContact = () => {
                             placeholder="Your phone number"
                             minLength="6"
                             maxLength="30"
-                            pattern="^[0-9 ]+$"
                             name='phone'
-                            value={formState.data.phone}
-                            onChange={(e) => handleChange(e)}
-                            onKeyUp={handleHelpPhone}
+                            value={state.data.phone}
+                            onChange={handleChange}
+                            isInvalid={state.labels.phone === '' ? false : true}
                         />
-                        <Form.Text className='helpWarning' id="phoneHelpBlock" muted className='ml-2'>
-                            {helpPhone}
-                        </Form.Text>
+                        <Form.Control.Feedback type='invalid'
+                            className='helpWarning ml-2'
+                            id="phoneHelpBlock"
+                        >
+                            {state.labels.phone}
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3" >
@@ -181,8 +138,8 @@ const FormContact = () => {
                             maxLength="250"
                             required
                             name='email'
-                            value={formState.data.email}
-                            onChange={(e) => handleChange(e)}
+                            value={state.data.email}
+                            onChange={handleChange}
                         />
                         <FormControl.Feedback />
                         <Form.Text id="emailHelpBlock" style={{ color: '#6c757d !important' }}>
@@ -201,7 +158,7 @@ const FormContact = () => {
                             style={{ height: '80px' }}
                             required
                             name='message'
-                            value={formState.data.message}
+                            value={state.data.message}
                             onChange={(e) => handleChange(e)}
                         />
                     </Col>
