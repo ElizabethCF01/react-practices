@@ -6,32 +6,46 @@ export const CHANGE_MESSAGE_VALUE = 'MESSAGE'
 export const CHANGE_STARS_VALUE = 'STARS'
 export const SUBMIT_FORM = 'SUBMIT'
 
-const rates = [" ", "DREADFUL", "BAD", "MEDIUM", "GOOD", "GRATE"]
+const rates = ['', 'DREADFUL', 'BAD', 'MEDIUM', 'GOOD', 'GRATE']
 
-export const initialFormState = {
-  data: {
-    name: '',
-    phone: '',
-    email: '',
-    message: '',
-    calification: 0
-  },
-  labels: {
-    name: '',
-    phone: '',
-    email: '',
-    message: '',
-    calification: ''
-  },
-  tooltips: {
-    name: '',
-    phone: '',
-    email: '',
-    message: '',
-    calification: ''
+// Models
+class FormData {
+  constructor() {
+    this.name = ''
+    this.phone = ''
+    this.email = ''
+    this.message = ''
+    this.calification = 0
+  }
+}
+class FormLabels {
+  constructor() {
+    this.name = ''
+    this.phone = ''
+    this.email = ''
+    this.message = ''
+    this.calification = ''
   }
 }
 
+class FormTooltips {
+  constructor() {
+    this.name = ''
+    this.phone = ''
+    this.email = ''
+    this.message = ''
+    this.calification = ''
+  }
+}
+export class FormState {
+  constructor() {
+    this.data = new FormData()
+    this.labels = new FormLabels()
+    this.tooltips = new FormTooltips()
+  }
+}
+
+// Reducer function
 const formReducer = (state, action) => {
   switch (action.type) {
     case CHANGE_NAME_VALUE:
@@ -57,8 +71,7 @@ const formReducer = (state, action) => {
       state.labels.calification = rates[action.value]
       return { ...state }
     case RESET_FORM:
-      state = initialFormState
-      return { ...state }
+      return new FormState()
     default:
       return { ...state }
   }

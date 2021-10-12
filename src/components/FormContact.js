@@ -14,7 +14,7 @@ import AlertResponse from './AlertResponse'
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
 // Reducers
-import formReducer, { initialFormState } from './FormReducer'
+import formReducer, { FormState } from './FormReducer'
 
 // Constants
 
@@ -22,7 +22,7 @@ import { RESET_FORM } from './FormReducer'
 
 const FormContact = () => {
 
-    const [state, dispatch] = useReducer(formReducer, initialFormState)
+    const [state, dispatch] = useReducer(formReducer, new FormState())
 
     //const [rate, setRate] = useState('')
     // const [starId, setStarId] = useState(0)
