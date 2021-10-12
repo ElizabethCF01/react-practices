@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react'
+import React, { useState, useReducer, useRef } from 'react'
 import axios from 'axios'
 
 // Bootstrap components
@@ -24,33 +24,34 @@ const FormContact = () => {
 
     const [state, dispatch] = useReducer(formReducer, initialFormState)
 
-    const [rate, setRate] = useState('')
-    const [starId, setStarId] = useState(0)
+    //const [rate, setRate] = useState('')
+    // const [starId, setStarId] = useState(0)
 
-    const tooltip = (<Tooltip id="tooltip">Please rate us</Tooltip>)
-    const [showtooltip, setShowtooltip] = useState(false);
+    const tooltip = (help) => {
+        return <Tooltip id="tooltip">{help}</Tooltip>
+    }
+    //const [showtooltip, setShowtooltip] = useState(false);
 
 
     const [alert, setAlert] = useState({ show: false, variant: '', text: '' })
 
-    const Stars = (myid) => {
-        if (myid <= starId)
+    const stars = (myid) => {
+        if (myid <= state.data.calification)
             return <BsStarFill className='star'></BsStarFill>
 
         return <BsStar className='star'></BsStar>
     }
 
-    const handleStarClick = (e) => {//=========================Clik on Stars===
-        const liStar = e.currentTarget
-        setStarId(liStar.id)
-        setRate(liStar.getAttribute('data-star-value'))
-        setShowtooltip(false)
-    }
+    /* const handleStarClick = (e) => {//=========================Clik on Stars===
+         const liStar = e.currentTarget
+         setStarId(liStar.id)
+         setRate(liStar.getAttribute('data-star-value'))
+         setShowtooltip(false)
+     }*/
     const handleSubmit = (e) => {//=========================Submit===
         e.preventDefault()
-        if (starId === 0) setShowtooltip(true)
-        else {
-            state.data.calification = starId
+        if (state.data.calification !== 0) {
+            // state.data.calification = starId
             console.log(state.data)
             const data = JSON.stringify(state.data)
             const url = 'http://localhost:4000/api/messages'
@@ -75,6 +76,7 @@ const FormContact = () => {
             value: input.value
         })
     }
+    //const toolh = useRef();
 
     return (
         <div className="registry-form container">
@@ -84,6 +86,12 @@ const FormContact = () => {
                         Name
                     </Form.Label>
                     <Col md={8}>
+                        {/* <OverlayTrigger
+                            placement="top"
+                            //show={}
+                            delay={{ hide: 450, show: 300 }}
+                            overlay={(props) => (<Tooltip {...props}>{state.tooltips.name}</Tooltip>)}
+                        >*/}
                         <Form.Control
                             type="text"
                             placeholder="Your name"
@@ -95,6 +103,7 @@ const FormContact = () => {
                             onChange={handleChange}
                             isInvalid={state.labels.name === '' ? false : true}
                         />
+                        {/*</OverlayTrigger>*/}
                         <Form.Control.Feedback type='invalid'
                             className='helpWarning ml-2'
                             id="NameHelpBlock"
@@ -103,7 +112,7 @@ const FormContact = () => {
                         </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
-                <Form.Group as={Row} className="mb-3" /*controlId="phone"*/>
+                <Form.Group as={Row} className="mb-3">
                     <Form.Label column md={4}>
                         Phone
                     </Form.Label>
@@ -159,7 +168,7 @@ const FormContact = () => {
                             required
                             name='message'
                             value={state.data.message}
-                            onChange={(e) => handleChange(e)}
+                            onChange={handleChange}
                         />
                     </Col>
                 </Form.Group>
@@ -168,18 +177,33 @@ const FormContact = () => {
                         Rate Us
                     </Form.Label>
                     <Col xs={9} md={5}>
-                        <OverlayTrigger placement="top" show={showtooltip} overlay={tooltip}>
+                        <OverlayTrigger placement="top" show={false} overlay={tooltip('Please rate us')}>
                             <ul className=" d-flex star-bar mb-3 mt-2">
-                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="DREADFUL" id="1">{Stars(1)}</li>
-                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="BAD" id="2">{Stars(2)}</li>
-                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="MEDIUM" id="3">{Stars(3)}</li>
-                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="GOOD" id="4">{Stars(4)}</li>
-                                <li onClick={handleStarClick} className="mx-2 liStar" data-star-value="GREAT" id="5">{Stars(5)}</li>
+                                <li onClick={() => dispatch({
+                                    type: 'STARS',
+                                    value: 1
+                                })} className="mx-2 liStar" id="1">{stars(1)}</li>
+                                <li onClick={() => dispatch({
+                                    type: 'STARS',
+                                    value: 2
+                                })} className="mx-2 liStar" id="2">{stars(2)}</li>
+                                <li onClick={() => dispatch({
+                                    type: 'STARS',
+                                    value: 3
+                                })} className="mx-2 liStar" id="3">{stars(3)}</li>
+                                <li onClick={() => dispatch({
+                                    type: 'STARS',
+                                    value: 4
+                                })} className="mx-2 liStar" id="4">{stars(4)}</li>
+                                <li onClick={() => dispatch({
+                                    type: 'STARS',
+                                    value: 5
+                                })} className="mx-2 liStar" id="5">{stars(5)}</li>
                             </ul>
                         </OverlayTrigger>
                     </Col>
                     <Col>
-                        <div className=" rate"><span id="rate">{rate}</span></div>
+                        <div className=" rate"><span id="rate">{state.labels.calification}</span></div>
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3">

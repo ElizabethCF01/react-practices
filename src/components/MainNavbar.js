@@ -19,7 +19,6 @@ const MainNavbar = () => {
             const show = window.scrollY > 50
             if (navRef.current !== show) {
                 setNavBackground(show)
-
             }
         }
         document.addEventListener('scroll', handleScroll)

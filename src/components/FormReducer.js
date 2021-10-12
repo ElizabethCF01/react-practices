@@ -4,6 +4,9 @@ export const CHANGE_PHONE_VALUE = 'PHONE'
 export const CHANGE_EMAIL_VALUE = 'EMAIL'
 export const CHANGE_MESSAGE_VALUE = 'MESSAGE'
 export const CHANGE_STARS_VALUE = 'STARS'
+export const SUBMIT_FORM = 'SUBMIT'
+
+const rates = [null, "DREADFUL", "BAD", "MEDIUM", "GOOD", "GRATE"]
 
 export const initialFormState = {
   data: {
@@ -32,11 +35,13 @@ export const initialFormState = {
 const formReducer = (state, action) => {
   switch (action.type) {
     case CHANGE_NAME_VALUE:
+      nameMinValue(state, action.value)
       if (nameOnlyLetters(state, action.value)) {
         state.data.name = action.value
       }
       return { ...state }
     case CHANGE_PHONE_VALUE:
+      phoneMinValue(state, action.value)
       if (phoneOnlyNumbers(state, action.value)) {
         state.data.phone = action.value
       }
@@ -48,6 +53,8 @@ const formReducer = (state, action) => {
       state.data.message = action.value
       return { ...state }
     case CHANGE_STARS_VALUE:
+      state.data.calification = action.value
+      state.labels.calification = rates[action.value]
       return { ...state }
     case 'RESET':
       state = initialFormState
@@ -57,22 +64,25 @@ const formReducer = (state, action) => {
   }
 }
 const nameOnlyLetters = (state, value = '') => {
-  const regex = /^[a-zA-Z]+$/
+  const regex = /^[a-zA-Z ]+$/
   const helpType = 'Only words allowed'
 
   if (value.match(regex) === null && value.length !== 0) {
-    state.labels.name = helpType
+    //state.labels.name = helpType
+    state.tooltips.name = helpType
     return false
   }
+  state.tooltips.name = ''
   return true
 }
 
 const nameMinValue = (state, value = '') => {
   const minlenght = 'Please lengthen this text to 2 charaters or more'
-  if (value.length < 2) {
+  if (value.length < 2 && value.length !== 0) {
     state.labels.name = minlenght
     return false
   }
+  state.labels.name = ''
   return true
 }
 
@@ -82,6 +92,7 @@ const phoneMinValue = (state, value) => {
     state.labels.phone = minlenght
     return false
   }
+  state.labels.phone = ''
   return true
 }
 
@@ -94,6 +105,7 @@ const phoneOnlyNumbers = (state, value) => {
     value = value.replace(/[^0-9 ]+/g, '')
     return false
   }
+  state.labels.phone = ''
   return true
 }
 
@@ -105,6 +117,7 @@ const validateEmail = (state, value) => {
     state.labels.email = helpType
     return false
   }
+  state.labels.email = helpType
   return true
 }
 
