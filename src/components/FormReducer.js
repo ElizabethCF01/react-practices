@@ -6,7 +6,7 @@ export const CHANGE_MESSAGE_VALUE = 'MESSAGE'
 export const CHANGE_STARS_VALUE = 'STARS'
 export const SUBMIT_FORM = 'SUBMIT'
 
-const rates = [null, "DREADFUL", "BAD", "MEDIUM", "GOOD", "GRATE"]
+const rates = [" ", "DREADFUL", "BAD", "MEDIUM", "GOOD", "GRATE"]
 
 export const initialFormState = {
   data: {
@@ -56,7 +56,7 @@ const formReducer = (state, action) => {
       state.data.calification = action.value
       state.labels.calification = rates[action.value]
       return { ...state }
-    case 'RESET':
+    case RESET_FORM:
       state = initialFormState
       return { ...state }
     default:
