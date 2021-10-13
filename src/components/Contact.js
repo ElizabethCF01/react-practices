@@ -1,13 +1,12 @@
 import React from 'react'
+
 import FormContact from './FormContact.js'
-import { Row, Col, Container } from 'react-bootstrap'
+
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
 
 const Contact = () => {
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log('Hello')
-    }
 
     return (
         <section className='registry py-5' id='contact'>
@@ -24,7 +23,7 @@ const Contact = () => {
                     </Col>
                     <Col md={{ span: 8, order: 1 }}>
                         <h3 className="mb-3">Registry Form</h3>
-                        <FormContact handleSubmit={handleSubmit} />
+                        <FormContact />
                     </Col>
                 </Row>
             </Container>

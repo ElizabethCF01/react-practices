@@ -1,4 +1,5 @@
 import React from 'react'
+
 import MainNavbar from '../components/MainNavbar'
 import Home from '../components/Home'
 import Contact from '../components/Contact'

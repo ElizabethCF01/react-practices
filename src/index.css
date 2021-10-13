@@ -14,7 +14,9 @@ body {
 .text-shadow {
   text-shadow: 0px 0px #6ac0e7;
   transition: all 1s ease; }
-
+.text-muted{
+ color: #ce2337 !important;
+}
 .home {
   position: relative;
   color: #fff;
@@ -115,10 +117,10 @@ body {
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25); }
 
-.registry-form input[type='email']:focus:valid {/*============================================*/
-  border-color: #04e62a;
+/*.registry-form input[type='email']:focus:invalid {/*============================================
+  border-color: #e60404;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(3, 241, 3, 0.25); }
+  box-shadow: 0 0 0 0.2rem rgba(241, 3, 3, 0.25); }*/
 
 .registry-form .stars ul {
   list-style: none;

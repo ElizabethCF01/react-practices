@@ -1,4 +1,5 @@
 import React from 'react'
+
 import Carousel from 'react-bootstrap/Carousel'
 
 import img1 from '../images/img-1.jpg'
@@ -23,7 +24,6 @@ const MyCarousel = () => {
                     src={img2}
                     alt="img"
                 />
-
             </Carousel.Item>
             <Carousel.Item>
                 <img
